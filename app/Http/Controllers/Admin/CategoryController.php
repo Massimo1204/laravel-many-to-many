@@ -15,7 +15,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        //
+        $categories = Category::all();
+        return view('admin.categories.index', compact('categories'));
     }
 
     /**
@@ -43,7 +44,7 @@ class CategoryController extends Controller
         $newCategory->color=$data['color'];
         $newCategory->save();
 
-        return redirect()->route('admin.posts.index')->with('created-category', 'Category successfully created');
+        return redirect()->route('admin.categories.index')->with('created-message', 'Category successfully Created');
     }
 
     /**
@@ -52,9 +53,10 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Category $category)
     {
-        //
+        $posts = $category->posts;
+        return view('admin.categories.show', compact('category' ,'posts'));
     }
 
     /**
@@ -63,9 +65,9 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Category $category)
     {
-        //
+        return view('admin.categories.edit', compact('category'));
     }
 
     /**
@@ -75,9 +77,13 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Category $category)
     {
-        //
+        $category->name = $request['name'];
+        $category->color = $request['color'];
+        $category->update();
+
+        return redirect()->route('admin.categories.index')->with('edited-message', 'Category successfully Modified');
     }
 
     /**
@@ -86,8 +92,10 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Category $category)
     {
-        //
+        $category->delete();
+
+        return redirect()->route('admin.categories.index')->with('deleted-message', 'Category successfully Deleted');
     }
 }
