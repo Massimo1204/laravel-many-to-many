@@ -32,6 +32,16 @@
             <input type="text" class="form-control" id="content" name="content" value="{{ old('content') ?? $post->content }}">
         </div>
     </div>
+    <div class="row">
+        @foreach ($categories as $category)
+        <div class="col-2">
+            <div class="form-check mr-4">
+                <input type="checkbox" class="form-check-input" name="category[]" value="{{$category->id}}" {{ $post->categories->contains($category) ? 'checked' : ''}}>
+                <label class="form-check-label" for="categories" style="color: {{$category->color}}">{{$category->name}}</label>
+            </div>
+        </div>
+        @endforeach
+    </div>
     <div class="float-right">
         <button type="submit" class="btn btn-primary mb-2">Submit</button>
     </div>

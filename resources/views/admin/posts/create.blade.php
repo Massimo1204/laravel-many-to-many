@@ -2,7 +2,7 @@
 
 @section('content')
 <h1 class="text-center my-5">Create a new Post</h1>
-<form class="w-50 m-auto clearfix" action="{{ route('admin.posts.store') }}" method='post'>
+<form class="w-50 m-auto" action="{{ route('admin.posts.store') }}" method='post'>
     @csrf
     @if ($errors->any())
         @foreach ($errors as $error)
@@ -30,8 +30,24 @@
             <input type="text" class="form-control" id="content" name="content" value="{{ old('content') ?? '' }}">
         </div>
     </div>
-    <div class="float-right">
-        <button type="submit" class="btn btn-primary mb-2">Submit</button>
+    <div class="row mb-3">
+        @foreach ($categories as $category)
+        <div class="col-2">
+            <div class="form-check mr-4">
+                <input type="checkbox" class="form-check-input" name="category[]" value="{{$category->id}}">
+                <label class="form-check-label" for="categories" style="color: {{$category->color}}">{{$category->name}}</label>
+            </div>
+        </div>
+        @endforeach
+    </div>
+    <div class="clearfix mt-3">
+        <a class="float-left" href="{{route('admin.categories.create')}}">
+            <button class="btn btn-success fw-bold mr-3" type="button">
+                Add Category
+            </button>
+        </a>
+        <button type="submit" class="btn btn-primary float-right">Submit</button>    
     </div>
 </form>
+
 @endsection

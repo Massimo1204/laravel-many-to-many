@@ -8,9 +8,14 @@
                 <a href="{{ route('guest-post', $post) }}">
                     <img class="mb-4" src="{{ $post->image_source }}" alt="post image">
                 </a>
-                <div class="my-content-wrapper">
+                <div class="my-content-wrapper clearfix">
                     <h3>{{ ucfirst($post->title) }}</h3>
                     <p>{{ ucfirst($post->content) }}</p>
+                    <ul class="float-right">
+                        @foreach ($post->categories as $category)
+                            <li class="d-inline ml-3 " style="color:{{$category->color}}">{{ $category->name }}</li>                            
+                        @endforeach
+                    </ul>
                 </div>
             </div>
         @endforeach

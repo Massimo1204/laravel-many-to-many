@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use App\Models\Category;
 use App\Models\Post;
 use App\User;
 
@@ -29,7 +30,8 @@ class HomeController extends Controller
      */
     public function create()
     {
-        return view('admin.posts.create');
+        $categories = Category::all();
+        return view('admin.posts.create', compact('categories'));
     }
 
     /**
@@ -59,6 +61,7 @@ class HomeController extends Controller
         $newPost->image_source = $data['image_source'];
         $newPost->slug = "slugPlaceHolder-12341414141214252236";
         $newPost->save();
+        $newPost->categories()->sync($data['category']);
         $newPost->slug = Str::slug($newPost->title, '-') . "-$newPost->id";
         $newPost->save();
 
@@ -84,7 +87,8 @@ class HomeController extends Controller
      */
     public function edit(Post $post)
     {
-        return view('admin.posts.edit', compact('post'));
+        $categories = Category::all();
+        return view('admin.posts.edit', compact('post','categories'));
     }
 
     /**
@@ -110,9 +114,10 @@ class HomeController extends Controller
         $post->image_source = $request['image_source'];
         $post->title = $request['title'];
         $post->content = $request['content'];
+        $post->categories()->sync($request['category']);
         $post->update();
 
-        return redirect()->route('admin.posts.show', compact('post'));
+        return redirect()->route('admin.posts.show', compact('post'))->with('edited-message', 'Post successfully modified');
     }
 
     /**
@@ -125,6 +130,6 @@ class HomeController extends Controller
     {
         $post->delete();
 
-        return redirect()->route('admin.posts.index');
+        return redirect()->route('admin.posts.index')->with('deleted-message', 'Post successfully deleted');
     }
 }
